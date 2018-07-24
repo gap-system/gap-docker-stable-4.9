@@ -8,7 +8,11 @@ RUN    sudo apt-get update -qq \
                                    # for ANUPQ package to build in 32-bit mode
                                    gcc-multilib \
                                    # for ZeroMQ package
-                                   libzmq3-dev
+                                   libzmq3-dev \
+                                   # for Jupyter
+                                   python3-pip
+
+RUN sudo pip3 install notebook jupyterlab_launcher jupyterlab traitlets ipython vdom
 
 RUN    cd /home/gap/inst/ \
     && rm -rf gap4r8 \
@@ -24,7 +28,14 @@ RUN    cd /home/gap/inst/ \
     && wget -q https://www.gap-system.org/pub/gap/gap4pkgs/packages-stable-4.9.tar.gz \
     && tar xzf packages-stable-4.9.tar.gz \
     && rm packages-stable-4.9.tar.gz \
-    && ../bin/BuildPackages.sh
+    && ../bin/BuildPackages.sh \
+    && cd JupyterKernel-* \
+    && python3 setup.py install --user
+
+RUN jupyter serverextension enable --py jupyterlab --user
+
+ENV PATH /home/gap/inst/gap-stable-4.9/pkg/JupyterKernel-0.99999/bin:${PATH}
+ENV JUPYTER_GAP_EXECUTABLE /home/gap/inst/gap-stable-4.9/bin/gap.sh
 
 # Set up new user and home directory in environment.
 # Note that WORKDIR will not expand environment variables in docker versions < 1.3.1.
