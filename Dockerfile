@@ -11,6 +11,7 @@ RUN    mkdir /home/gap/inst/ \
     && ./autogen.sh \
     && ./configure \
     && make \
+    && cp bin/gap.sh bin/gap \
     && mkdir pkg \
     && cd pkg \
     && wget -q https://www.gap-system.org/pub/gap/gap4pkgs/packages-stable-4.9.tar.gz \
