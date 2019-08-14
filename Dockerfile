@@ -18,12 +18,14 @@ RUN    mkdir /home/gap/inst/ \
     && tar xzf packages-stable-4.9.tar.gz \
     && rm packages-stable-4.9.tar.gz \
     && ../bin/BuildPackages.sh \
-    && cd JupyterKernel-* \
+    && test='JupyterKernel-*' \
+    && mv ${test} JupyterKernel \
+    && cd JupyterKernel \
     && python3 setup.py install --user
 
 RUN jupyter serverextension enable --py jupyterlab --user
 
-ENV PATH /home/gap/inst/gap-stable-4.9/pkg/JupyterKernel-0.99999/bin:${PATH}
+ENV PATH /home/gap/inst/gap-stable-4.9/pkg/JupyterKernel/bin:${PATH}
 ENV JUPYTER_GAP_EXECUTABLE /home/gap/inst/gap-stable-4.9/bin/gap.sh
 
 # Set up new user and home directory in environment.
